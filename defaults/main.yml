@@ -1,0 +1,9 @@
+---
+backup_dir: /tmp/database-backups
+
+databases:
+  - dbname: kpm
+    user: kpm
+    password: kpm
+    host: postgres.kpm.svc.cluster.local
+    port: 5432

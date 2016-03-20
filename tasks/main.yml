@@ -1,0 +1,19 @@
+---
+- name: Create dest directory
+  file: path={{backup_dir}} state=directory recurse=yes
+
+
+- name: dump databases
+  shell: "PGPASSWORD={{item.password}} pg_dump -p {{item.port|default(5432)}} --host {{item.host}} --username {{item.user}} --clean --format=c --no-owner --no-acl -d {{item.dbname}} > {{backup_dir|default('/tmp')}}/{{item.host}}_{{item.dbname}}_{{ansible_date_time.iso8601}}.dump"
+  with_items: databases
+
+- name: uploads items
+  gc_storage:
+    bucket: kpm-backups
+    object: "{{item.host}}/{{item.dbname}}/{{item.dbname}}_{{ansible_date_time.iso8601}}.dump"
+    src: "{{backup_dir|default('/tmp')}}/{{item.host}}_{{item.dbname}}_{{ansible_date_time.iso8601}}.dump"
+    mode: put
+    permission: private
+    gs_access_key: 'key'
+    gs_secret_key: "secret'
+  with_items: databases

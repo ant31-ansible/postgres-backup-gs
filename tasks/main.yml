@@ -10,7 +10,7 @@
 - name: uploads items
   gc_storage:
     bucket: kpm-backups
-    object: "{{item.host}}/{{item.dbname}}/{{item.dbname}}_{{ansible_date_time.iso8601}}.dump"
+    object: "{{item.host}}/{{item.dbname}}/{{ansible_date_time.year}}/{{ansible_date_time.month}}/{{ansible_date_time.day}}/{{item.dbname}}_{{ansible_date_time.iso8601}}.dump"
     src: "{{backup_dir|default('/tmp')}}/{{item.host}}_{{item.dbname}}_{{ansible_date_time.iso8601}}.dump"
     mode: put
     permission: private
